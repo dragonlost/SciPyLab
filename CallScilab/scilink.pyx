@@ -43,7 +43,7 @@ class SciLink:
     """Scilab link"""
     def __init__(self):
         print("Starting Scilab Engine ....")
-        if(StartScilab(NULL, NULL, 0)):
+        if(StartScilab("/usr/share/scilab/", NULL, 0)):
             print("Scilab Engine has been started succesfully!!!")
         else:
             raise ScilabError("Scilab Engine could not be started!!!")

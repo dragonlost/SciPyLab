@@ -17,19 +17,35 @@ limitations under the License.
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
-import os
+import os, sys
 
-common_include_base = r"C:\Program Files\scilab-5.5.0\modules"
-sci_include = [
-            os.path.join(common_include_base, "core", "includes"),
-            os.path.join(common_include_base, "call_scilab", "includes"),
-            os.path.join(common_include_base, "api_scilab", "includes"),
-            os.path.join(common_include_base, "output_stream", "includes")
-		       ]
+if os.name == 'nt':
+	common_include_base = r"C:\Program Files\scilab-5.5.0\modules"
+	sci_include = [
+		        os.path.join(common_include_base, "core", "includes"),
+		        os.path.join(common_include_base, "call_scilab", "includes"),
+		        os.path.join(common_include_base, "api_scilab", "includes"),
+		        os.path.join(common_include_base, "output_stream", "includes")
+				   ]
 
-sci_lib_dir =  [r"C:\Program Files\scilab-5.5.0\bin"]
-sci_librairies = ['core', 'api_scilab', 'call_scilab', 'output_stream']
-sci_extra_link_args = ['']
+	sci_lib_dir =  [r"C:\Program Files\scilab-5.5.0\bin"]
+	sci_librairies = ['core', 'api_scilab', 'call_scilab', 'output_stream']
+	sci_extra_link_args = ['']
+
+elif os.name == 'posix':
+	common_include_base = os.path.join("/","usr", "include", "scilab")
+	sci_include = [ common_include_base,
+			os.path.join(common_include_base, "core"),
+			os.path.join(common_include_base, "call_scilab"),
+		    os.path.join(common_include_base, "api_scilab", "includes"),
+		    os.path.join(common_include_base, "output_stream", "includes")
+			  ]
+	sci_lib_dir = [os.path.join("/","usr", "lib", "scilab")]
+	sci_librairies = []
+	sci_extra_link_args = ['-Wl,--no-as-needed',  '-lscilab', '-lscicall_scilab', '-lsciconsole', '-lscilocalization', '-lscihistory_manager', '-lscihistory_browser', '-lscigraphics', '-lscicompletion', '-lscifunctions', '-lscicommons']
+else:
+	raise NotImplementedError("Only 'nt' and 'posix' are supported")
+
 
 sci_sources = ['scilink.pyx']
 
